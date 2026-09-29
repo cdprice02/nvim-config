@@ -92,4 +92,11 @@ return {
             vim.lsp.enable(servers)
         end,
     },
+    {
+        -- LSP progress (indexing, cargo check) in the corner.
+        "j-hui/fidget.nvim",
+        version = "*",
+        event = "LspAttach",
+        opts = {},
+    },
 }
