@@ -35,6 +35,11 @@ export XDG_CONFIG_HOME="$sandbox/config"
 export XDG_DATA_HOME="$sandbox/$version/data"
 export XDG_STATE_HOME="$sandbox/$version/state"
 export XDG_CACHE_HOME="$sandbox/$version/cache"
+# A vault of the sandbox's own, whatever the machine's is (or isn't):
+# obsidian.nvim only installs and loads where $OBSIDIAN_VAULT exists, and
+# lazy.nvim skips installing a plugin whose cond is false.
+mkdir -p "$sandbox/vault"
+export OBSIDIAN_VAULT="$sandbox/vault"
 export PLENARY_DIR="$plenary_dir"
 export NVIM_CONFIG_ROOT="$root"
 

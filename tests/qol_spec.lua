@@ -23,8 +23,12 @@ describe("todo-comments", function()
         vim.fn.writefile({ "-- TODO: something", "local x = 1" }, path)
         vim.cmd.edit(path)
         local buf = vim.api.nvim_get_current_buf()
-        local ns = vim.api.nvim_get_namespaces()["todo-comments"]
+        -- todo-comments asks treesitter whether a TODO sits in a comment.
+        -- A UI's first redraw parses the buffer; headless nvim never
+        -- redraws, so parse before its (throttled) first pass runs.
+        vim.treesitter.get_parser(buf):parse()
         local ok = vim.wait(3000, function()
+            local ns = vim.api.nvim_get_namespaces()["todo-comments"]
             return ns ~= nil and #vim.api.nvim_buf_get_extmarks(buf, ns, 0, -1, {}) > 0
         end, 50)
         assert.is_true(ok)
@@ -62,11 +66,12 @@ describe("obsidian", function()
             vim.v.progpath,
             "--headless",
             "-c",
-            [[lua io.stdout:write(tostring(require("lazy.core.config").plugins["obsidian.nvim"] ~= nil))]],
+            [[lua io.stdout:write("\nactive=" .. tostring(require("lazy.core.config").plugins["obsidian.nvim"] ~= nil))]],
             "+qa!",
         }, { env = env, clear_env = true, text = true }):wait(60000)
         assert.are.equal(0, result.code, result.stderr)
-        return result.stdout == "true"
+        -- Anything lazy.nvim prints at startup comes first; the answer is last.
+        return result.stdout:match("active=(%a+)%s*$") == "true"
     end
 
     it("stays off when OBSIDIAN_VAULT is empty", function()
