@@ -25,13 +25,16 @@ fi
 
 # stdpath("config") must resolve to this repo, so lazy.nvim finds
 # lua/cdprice/lazy/ and lazy-lock.json exactly as it would in real use.
-mkdir -p "$sandbox/config" "$sandbox/data" "$sandbox/state" "$sandbox/cache"
+# Data/state/cache are per Neovim version: plugins, and especially compiled
+# treesitter parsers, differ between 0.11 and 0.12 and must not leak across.
+version="$("$nvim" --version | head -n 1 | tr -c 'A-Za-z0-9.\n' '_')"
+mkdir -p "$sandbox/config" "$sandbox/$version"/{data,state,cache}
 ln -sfn "$root" "$sandbox/config/nvim"
 
 export XDG_CONFIG_HOME="$sandbox/config"
-export XDG_DATA_HOME="$sandbox/data"
-export XDG_STATE_HOME="$sandbox/state"
-export XDG_CACHE_HOME="$sandbox/cache"
+export XDG_DATA_HOME="$sandbox/$version/data"
+export XDG_STATE_HOME="$sandbox/$version/state"
+export XDG_CACHE_HOME="$sandbox/$version/cache"
 export PLENARY_DIR="$plenary_dir"
 export NVIM_CONFIG_ROOT="$root"
 
