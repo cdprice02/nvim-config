@@ -43,5 +43,7 @@ target="${1:-$root/tests}"
 # the specs run, so no spec pays (or times out on) a first-run clone.
 "$nvim" --headless "+Lazy! restore" +qa
 
-"$nvim" --headless --noplugin -u "$root/tests/minimal_init.lua" \
-  -c "PlenaryBustedDirectory $target { minimal_init = '$root/tests/minimal_init.lua', sequential = true, timeout = 120000 }"
+# `init`, not `minimal_init`: plenary adds --noplugin for the latter, and
+# lazy.nvim loads no plugins at all under --noplugin.
+"$nvim" --headless -u "$root/tests/minimal_init.lua" \
+  -c "PlenaryBustedDirectory $target { init = '$root/tests/minimal_init.lua', sequential = true, timeout = 120000 }"
