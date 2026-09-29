@@ -23,4 +23,13 @@ return {
         },
         opts = {},
     },
+    {
+        -- TODO/FIXME/HACK/NOTE/PERF/WARN highlighted in comments, replacing
+        -- VS Code's Better Comments; listed by <leader>td above.
+        "folke/todo-comments.nvim",
+        version = "*",
+        event = { "BufReadPost", "BufNewFile" },
+        dependencies = { "nvim-lua/plenary.nvim" },
+        opts = {},
+    },
 }
