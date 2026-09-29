@@ -1,0 +1,48 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    name: test (nvim ${{ matrix.nvim }})
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        # v0.11.5: the Intel Mac's pinned nixpkgs-25.05-darwin.
+        # stable: nixpkgs-unstable on WSL and Apple Silicon (0.12.x).
+        nvim: [v0.11.5, stable]
+    steps:
+      - uses: actions/checkout@v7.0.1
+      - uses: rhysd/action-setup-vim@v1.6.1
+        id: vim
+        with:
+          neovim: true
+          version: ${{ matrix.nvim }}
+      - name: Run specs
+        env:
+          NVIM: ${{ steps.vim.outputs.executable }}
+        run: scripts/test.sh
+
+  stylua:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v7.0.1
+      - uses: JohnnyMorganz/stylua-action@v5.0.0
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          version: 2.5.2
+          args: --check .
