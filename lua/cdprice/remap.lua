@@ -39,5 +39,8 @@ map("i", "<C-c>", "<Esc>")
 
 map("n", "<leader><leader>", "<cmd>source<CR>", { desc = "Source current file" })
 
+-- Pick a project and switch to its tmux session (nix-atelier's tmux feature).
+map("n", "<C-f>", "<cmd>silent !tmux neww tmux-sessionizer<CR>", { desc = "tmux-sessionizer" })
+
 map("n", "<leader>s", [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left>]], { desc = "Replace word under cursor" })
 map("n", "<leader>x", "<cmd>!chmod +x %<CR>", { silent = true, desc = "Make file executable" })

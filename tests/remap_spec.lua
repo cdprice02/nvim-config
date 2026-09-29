@@ -32,6 +32,7 @@ describe("remaps", function()
         { "n", "<Space>j", "<Cmd>lprev<CR>zz" },
         { "i", "<C-C>", "<Esc>" },
         { "n", "<Space><Space>", "<Cmd>source<CR>" },
+        { "n", "<C-F>", "<Cmd>silent !tmux neww tmux-sessionizer<CR>" },
         { "n", "<Space>x", "<Cmd>!chmod +x %<CR>" },
     }
 
