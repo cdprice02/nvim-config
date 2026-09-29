@@ -1,0 +1,8 @@
+describe("icons", function()
+    it("provides nvim-web-devicons through mini.icons", function()
+        local devicons = require("nvim-web-devicons")
+        local icon = devicons.get_icon("init.lua", "lua")
+        assert.is_not_nil(icon)
+        assert.is_not_nil(package.loaded["mini.icons"])
+    end)
+end)
