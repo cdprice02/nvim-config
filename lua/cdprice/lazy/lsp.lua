@@ -15,6 +15,14 @@ local servers = {
     "ruff",
     "lua_ls",
     "nixd",
+    "taplo",
+    "jsonls",
+    "yamlls",
+    "html",
+    "cssls",
+    "marksman",
+    "bashls",
+    "clangd",
 }
 
 -- errorLens.messageTemplate "$severity $message", with errorLens's own
@@ -91,6 +99,12 @@ return {
 
             vim.lsp.enable(servers)
         end,
+    },
+    {
+        -- JSON/YAML schemas for jsonls and yamlls (after/lsp/), loaded
+        -- the first time either server's config asks for them.
+        "b0o/SchemaStore.nvim",
+        lazy = true,
     },
     {
         -- LSP progress (indexing, cargo check) in the corner.
