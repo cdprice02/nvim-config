@@ -7,8 +7,6 @@ vim.g.maplocalleader = " "
 
 local map = vim.keymap.set
 
-map("n", "<leader>pv", vim.cmd.Ex, { desc = "File explorer" })
-
 -- Move the visual selection down/up a line, reindenting as it goes.
 map("v", "J", ":m '>+1<CR>gv=gv", { desc = "Move selection down" })
 map("v", "K", ":m '<-2<CR>gv=gv", { desc = "Move selection up" })

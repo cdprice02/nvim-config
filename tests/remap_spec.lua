@@ -47,10 +47,6 @@ describe("remaps", function()
         assert.matches("^:%%s/", vim.fn.maparg("<Space>s", "n"))
     end)
 
-    it("maps <leader>pv to the file explorer", function()
-        assert.is_not_nil(rhs("n", "<Space>pv"))
-    end)
-
     -- 1=c: LSP actions come from Neovim's own defaults, not from this config.
     it("leaves the built-in LSP defaults in place", function()
         for _, lhs in ipairs({ "grn", "gra", "grr", "gri" }) do
