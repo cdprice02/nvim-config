@@ -1,0 +1,37 @@
+describe("options", function()
+  it("uses relative line numbers", function()
+    assert.is_true(vim.o.number)
+    assert.is_true(vim.o.relativenumber)
+  end)
+
+  it("keeps 8 lines of context around the cursor", function()
+    assert.are.equal(8, vim.o.scrolloff)
+  end)
+
+  it("highlights search matches", function()
+    assert.is_true(vim.o.hlsearch)
+    assert.are.equal("split", vim.o.inccommand)
+  end)
+
+  it("indents with 4 spaces", function()
+    assert.are.equal(4, vim.o.tabstop)
+    assert.are.equal(4, vim.o.shiftwidth)
+    assert.is_true(vim.o.expandtab)
+  end)
+
+  it("keeps persistent undo under stdpath('state')", function()
+    assert.is_true(vim.o.undofile)
+    assert.is_false(vim.o.swapfile)
+    local undodir = vim.fn.fnamemodify(vim.split(vim.o.undodir, ",")[1], ":p")
+    local state = vim.fn.fnamemodify(vim.fn.stdpath("state"), ":p")
+    assert.are.equal(state, undodir:sub(1, #state))
+  end)
+
+  it("leaves colorcolumn unset", function()
+    assert.are.equal("", vim.o.colorcolumn)
+  end)
+
+  it("uses space as leader", function()
+    assert.are.equal(" ", vim.g.mapleader)
+  end)
+end)
