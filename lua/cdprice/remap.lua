@@ -31,6 +31,13 @@ map("n", "Q", "<nop>")
 
 map("n", "<C-k>", "<cmd>cnext<CR>zz", { desc = "Next quickfix item" })
 map("n", "<C-j>", "<cmd>cprev<CR>zz", { desc = "Previous quickfix item" })
+map("n", "<leader>k", "<cmd>lnext<CR>zz", { desc = "Next location list item" })
+map("n", "<leader>j", "<cmd>lprev<CR>zz", { desc = "Previous location list item" })
+
+-- <C-c> leaves insert mode without firing InsertLeave; make it a real <Esc>.
+map("i", "<C-c>", "<Esc>")
+
+map("n", "<leader><leader>", "<cmd>source<CR>", { desc = "Source current file" })
 
 map("n", "<leader>s", [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left>]], { desc = "Replace word under cursor" })
 map("n", "<leader>x", "<cmd>!chmod +x %<CR>", { silent = true, desc = "Make file executable" })
