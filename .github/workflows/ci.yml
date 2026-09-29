@@ -33,7 +33,7 @@ jobs:
           version: ${{ matrix.nvim }}
       # nvim-treesitter's main branch (Neovim 0.12+) builds parsers with the
       # tree-sitter CLI. Pinned to the version nixpkgs ships.
-      - name: Install tree-sitter CLI
+      - name: Install tree-sitter CLI and jupytext
         env:
           TREE_SITTER_VERSION: v0.26.9
         run: |
@@ -42,6 +42,9 @@ jobs:
             | gunzip > "$HOME/.local/bin/tree-sitter"
           chmod +x "$HOME/.local/bin/tree-sitter"
           echo "$HOME/.local/bin" >> "$GITHUB_PATH"
+          # jupytext.nvim converts notebooks through it (lang-python.nix
+          # installs it on real machines).
+          pipx install jupytext==1.18.1
       - name: Run specs
         env:
           NVIM: ${{ steps.vim.outputs.executable }}

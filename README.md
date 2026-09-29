@@ -14,6 +14,8 @@ lua/cdprice/set.lua       options
 lua/cdprice/remap.lua     non-LSP keymaps
 lua/cdprice/lazy_init.lua lazy.nvim bootstrap
 lua/cdprice/wsl.lua       clipboard provider, WSL only
+lua/cdprice/slurm.lua     Slurm batch scripts: filetype and sbatch key
+lua/cdprice/cells.lua     `# %%` cells: motions, text objects, sending to IPython
 lua/cdprice/lazy/*.lua    one plugin spec per file
 after/lsp/<server>.lua    per-server settings, merged over nvim-lspconfig's definitions
 tests/*_spec.lua          plenary-busted specs
