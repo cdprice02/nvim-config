@@ -15,6 +15,27 @@ local config_dir = vim.fn.stdpath("config")
 -- ruff option, so it goes before the subcommand conform supplies.
 local ruff_line_length = { "--config", "line-length=240" }
 
+--- conform's own {name} ruff formatter, with the line length above and,
+--- for a notebook opened as a `# %%` script (jupytext.nvim), a .py
+--- --stdin-filename: given the .ipynb name, ruff expects notebook JSON on
+--- stdin.
+local function ruff(name)
+    local base = require("conform.formatters." .. name)
+    local function with(base_args)
+        return function(self, ctx)
+            local args = type(base_args) == "function" and base_args(self, ctx) or vim.deepcopy(base_args)
+            local filename = ctx.filename:gsub("%.ipynb$", ".py")
+            for i, arg in ipairs(args) do
+                if arg == "$FILENAME" then
+                    args[i] = filename
+                end
+            end
+            return vim.list_extend(vim.deepcopy(ruff_line_length), args)
+        end
+    end
+    return { args = with(base.args), range_args = base.range_args and with(base.range_args) or nil }
+end
+
 --- Format-on-save options, or nil when it's switched off globally or for
 --- {buf}.
 local function on_save(buf)
@@ -50,31 +71,35 @@ return {
             end
         end, { bang = true, desc = "Toggle format on save (! for this buffer only)" })
     end,
+    -- A function: ruff() reads conform's own formatter definitions, which
+    -- only exist once conform is on the runtimepath.
     ---@module 'conform'
-    ---@type conform.setupOpts
-    opts = {
-        formatters_by_ft = {
-            python = { "ruff_organize_imports", "ruff_format" },
-            lua = { "stylua" },
-            nix = { "nixfmt" },
-            toml = { "taplo" },
-            sh = { "shfmt" },
-            bash = { "shfmt" },
-            json = { "prettierd" },
-            jsonc = { "prettierd" },
-            yaml = { "prettierd" },
-            markdown = { "prettierd" },
-        },
-        formatters = {
-            ruff_format = { prepend_args = ruff_line_length },
-            ruff_organize_imports = { prepend_args = ruff_line_length },
-            -- prettier.quoteProps/trailingComma from VS Code, for projects
-            -- without their own .prettierrc (which still wins).
-            prettierd = {
-                env = { PRETTIERD_DEFAULT_CONFIG = config_dir .. "/prettierrc.json" },
+    ---@return conform.setupOpts
+    opts = function()
+        return {
+            formatters_by_ft = {
+                python = { "ruff_organize_imports", "ruff_format" },
+                lua = { "stylua" },
+                nix = { "nixfmt" },
+                toml = { "taplo" },
+                sh = { "shfmt" },
+                bash = { "shfmt" },
+                json = { "prettierd" },
+                jsonc = { "prettierd" },
+                yaml = { "prettierd" },
+                markdown = { "prettierd" },
             },
-        },
-        default_format_opts = { lsp_format = "fallback" },
-        format_on_save = on_save,
-    },
+            formatters = {
+                ruff_format = ruff("ruff_format"),
+                ruff_organize_imports = ruff("ruff_organize_imports"),
+                -- prettier.quoteProps/trailingComma from VS Code, for projects
+                -- without their own .prettierrc (which still wins).
+                prettierd = {
+                    env = { PRETTIERD_DEFAULT_CONFIG = config_dir .. "/prettierrc.json" },
+                },
+            },
+            default_format_opts = { lsp_format = "fallback" },
+            format_on_save = on_save,
+        }
+    end,
 }
