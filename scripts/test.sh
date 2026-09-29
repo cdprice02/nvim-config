@@ -42,9 +42,10 @@ target="${1:-$root/tests}"
 
 "$nvim" --version | head -n 1
 
-# One warm-up start installs any missing plugins from lazy-lock.json before
-# the specs run, so no spec pays (or times out on) a first-run clone.
-"$nvim" --headless "+Lazy! restore" +qa
+# One warm-up start installs everything a first run would (plugins from
+# lazy-lock.json, treesitter parsers, blink's fuzzy matcher) before the
+# specs run, so no spec pays for, races, or times out on a first-run install.
+"$nvim" --headless -c "luafile $root/tests/warmup.lua"
 
 # `init`, not `minimal_init`: plenary adds --noplugin for the latter, and
 # lazy.nvim loads no plugins at all under --noplugin.
