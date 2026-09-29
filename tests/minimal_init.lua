@@ -10,8 +10,8 @@ local plenary = assert(os.getenv("PLENARY_DIR"), "run specs through scripts/test
 -- doesn't exist, and a headless nvim with nothing left to do never exits.
 local ok, err = pcall(dofile, root .. "/init.lua")
 if not ok then
-  io.stderr:write("config failed to load: " .. tostring(err) .. "\n")
-  vim.cmd("cquit 1")
+    io.stderr:write("config failed to load: " .. tostring(err) .. "\n")
+    vim.cmd("cquit 1")
 end
 
 vim.opt.rtp:append(plenary)
