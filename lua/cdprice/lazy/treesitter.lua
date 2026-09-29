@@ -32,6 +32,10 @@ local parsers = {
     "c",
     "gitignore",
     "dockerfile",
+    -- fugitive's commit, rebase and diff buffers.
+    "gitcommit",
+    "git_rebase",
+    "diff",
 }
 
 local is_main = vim.fn.has("nvim-0.12") == 1
