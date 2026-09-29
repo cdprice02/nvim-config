@@ -1,5 +1,6 @@
 require("cdprice.set")
 require("cdprice.remap")
+require("cdprice.wsl").setup()
 require("cdprice.lazy_init")
 
 local augroup = vim.api.nvim_create_augroup
